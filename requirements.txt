@@ -2,3 +2,4 @@ bentoml
 transformers
 tensorflow
 huggingface_hub
+pillow
