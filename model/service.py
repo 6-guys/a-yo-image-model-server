@@ -1,6 +1,8 @@
 import bentoml
 import os
-from bentoml.io import Image, JSON
+from bentoml import env, artifacts, api
+from bentoml.io.image import Image
+from bentoml.io.json import JSON
 from transformers import AutoTokenizer
 from PIL import Image as PILImage
 import tensorflow as tf
@@ -14,15 +16,30 @@ repo_id = "mk48/nipa-cunet"
 model_filename = "unetv2_rgbmse.keras"
 model = load_model_from_huggingface(repo_id, model_filename)
 
+# # 3. BentoML 서비스 정의 (v2.x 스타일)
+# service = bentoml.Service(
+#     name="frame_generation_service",
+#     runners=[bentoml.Runner(model)]
+# )
+
+# @service.api(input=Image(), output=JSON())
+# def generate_frames(input_image):
+#     input_array = preprocess_image(input_image)
+    
+#     # 모델 예측
+#     generated_frames = service.runners[0].run(input_array)  # (10, 128, 128, 3)
+#     generated_frames = (generated_frames * 255).astype(np.uint8).squeeze().tolist()  # 리스트로 변환
+    
+#     return {"generated_frames": generated_frames}
 
 # 2. BentoML 서비스 정의
-@bentoml.env(infer_pip_packages=True)
-@bentoml.artifacts([
+@env(infer_pip_packages=True)
+@artifacts([
     bentoml.artifact.TensorflowModelArtifact('model'),
 ])
 class FrameGenerationService(bentoml.BentoService):
     
-    @bentoml.api(input=Image(), output=JSON())
+    @api(input=Image(), output=JSON())
     def generate_frames(self, input_image):
         input_array = preprocess_image(input_image)
         
