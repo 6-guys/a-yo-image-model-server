@@ -25,7 +25,7 @@ class FrameGenerationService(bentoml.BentoService):
         input_array = preprocess_image(input_image)
         
         # 모델 예측
-        generated_frames = self.artifacts.model.predict(input_array)  # (10, 128, 128, 3)
+        generated_frames = self.artifacts.model.predict(input_array)  # (10, 128, 128, 4)
         generated_frames = (generated_frames * 255).astype(np.uint8).squeeze().tolist()  # 리스트로 변환
         
         return {"generated_frames": generated_frames}
