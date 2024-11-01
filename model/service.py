@@ -2,16 +2,18 @@ import bentoml
 import os
 from bentoml.io import Image, JSON
 from transformers import AutoTokenizer
+from PIL import Image as PILImage
 import tensorflow as tf
 import numpy as np
 
 from loss import mse_rgb
-from preprocessing import preprocess_image
+from preprocessing import preprocess_image, load_model_from_huggingface
 
-# 1. 허깅페이스 허브에서 Keras 기반 모델 로드
-model_name = 'unetv2_rgbmse.keras'
-model_path = os.path.join(os.path.dirname(__file__), model_name)  # 사용하려는 모델 이름으로 변경
-model = tf.keras.models.load_model(model_path)
+# 모델 다운로드 및 로드
+repo_id = "mk48/nipa-cunet"
+model_filename = "unetv2_rgbmse.keras"
+model = load_model_from_huggingface(repo_id, model_filename)
+
 
 # 2. BentoML 서비스 정의
 @bentoml.env(infer_pip_packages=True)
