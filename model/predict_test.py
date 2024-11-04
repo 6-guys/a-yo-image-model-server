@@ -1,6 +1,5 @@
 import bentoml
 import numpy as np
-import torch
 
 with bentoml.SyncHTTPClient("https://a-yo-image-fbf92702.mt-guc1.bentoml.ai/") as client:
     test_random_array = np.random.rand(128, 128, 4) * 255

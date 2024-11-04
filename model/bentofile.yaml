@@ -7,7 +7,6 @@ include:
   - "*.py"
 python:
   packages:
-  - torch
   - transformers
   - bentoml
   - tensorflow
