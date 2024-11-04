@@ -1,0 +1,17 @@
+
+service: "service:FrameGenerationService"
+labels:
+  stage: dev
+  project: quickstart
+include:
+  - "*.py"
+python:
+  packages:
+  - torch
+  - transformers
+  - bentoml
+  - tensorflow
+  - huggingface_hub
+  - pillow
+docker:
+  python_version: 3.9

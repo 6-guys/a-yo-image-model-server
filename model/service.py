@@ -20,15 +20,19 @@ class FrameGenerationService:
         # Model download and load
         repo_id = "mk48/nipa-cunet"
         model_filename = "unetv2_rgbmse.keras"
-        model = load_model_from_huggingface(repo_id, model_filename)
+        self.model = load_model_from_huggingface(repo_id, model_filename)
 
     @bentoml.api
     def generate_frames(self,         
-            input_array: Annotated[torch.Tensor, Shape((128, 128, 4)), DType("float8")]
-            = Field(description="A 128x128x4 tensor with float8 dtype")) -> np.ndarray :
-        
+            input_array: Annotated[np.ndarray, Shape((128, 128, 4)), DType("float16")]
+            = Field(description="A 128x128x4 tensor with float16 dtype")) -> np.ndarray :
+        label = np.zeros((9 ,10))
+        for i in range(9) :
+            label[i, 1] = 1
+        input_img = np.expand_dims(input_array, axis=0)
+        input_img = np.repeat(input_img , 9 , axis = 0)
         # Model prediction
-        generated_frames = self.model.predict(input_array)  # (128, 128, 4)
-        generated_frames = (generated_frames * 255).astype(np.uint8).squeeze().tolist()  # 리스트로 변환
-        
-        return {"generated_frames": generated_frames}
+        generated_frames = self.model.predict([input_img , label])  # (128, 128, 4)
+        print(generated_frames.shape)
+        generated_frames = (generated_frames * 255).astype(np.uint8).tolist()  # 리스트로 변환
+        return generated_frames
