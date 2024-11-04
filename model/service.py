@@ -24,11 +24,11 @@ class FrameGenerationService:
 
     @bentoml.api
     def generate_frames(self,         
-            input_array: Annotated[torch.Tensor, Shape((128, 128, 4)), DType("float16")]
+            input_array: Annotated[np.ndarray, Shape((128, 128, 4)), DType("float16")]
             = Field(description="A 128x128x4 tensor with float16 dtype")) -> np.ndarray :
         label = np.zeros(10)
         label[1] = 1
-        input_img = np.expand_dims(input_array.numpy(), axis=0)
+        input_img = np.expand_dims(input_array, axis=0)
         input_label = np.expand_dims(label, axis=0)
         # Model prediction
         generated_frames = self.model.predict([input_img , input_label])  # (128, 128, 4)
