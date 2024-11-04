@@ -1,6 +1,5 @@
 import bentoml
 import numpy as np
-import torch
 from bentoml.validators import Shape, DType
 from pydantic import Field
 from typing import Annotated  # Python 3.9 or above
@@ -28,11 +27,11 @@ class FrameGenerationService:
             = Field(description="A 128x128x4 tensor with float16 dtype")) -> np.ndarray :
         label = np.zeros((9 ,10))
         for i in range(9) :
-            label[i, 1] = 1
+            label[i, i + 1] = 1
         input_img = np.expand_dims(input_array, axis=0)
         input_img = np.repeat(input_img , 9 , axis = 0)
         # Model prediction
         generated_frames = self.model.predict([input_img , label])  # (128, 128, 4)
         print(generated_frames.shape)
-        generated_frames = (generated_frames * 255).astype(np.uint8).tolist()  # 리스트로 변환
+        generated_frames = (generated_frames).astype(np.uint8).tolist()  # 리스트로 변환
         return generated_frames
