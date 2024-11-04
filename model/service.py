@@ -19,7 +19,7 @@ class FrameGenerationService:
     def __init__(self) -> None:
         # Model download and load
         repo_id = "mk48/nipa-cunet"
-        model_filename = "cunet.keras"
+        model_filename = "unetv2_rgbmse.keras"
         self.model = load_model_from_huggingface(repo_id, model_filename)
 
     @bentoml.api
