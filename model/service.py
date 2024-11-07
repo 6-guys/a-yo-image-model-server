@@ -33,5 +33,8 @@ class FrameGenerationService:
         # Model prediction
         generated_frames = self.model.predict([input_img , label])  # (128, 128, 4)
         print(generated_frames.shape)
-        generated_frames = (generated_frames).astype(np.uint8).tolist()  # 리스트로 변환
+
+        # Assuming generated_frames is your array
+        generated_frames = np.clip(generated_frames, 0, 255).astype(np.uint8)
+        generated_frames = generated_frames.tolist()  # 리스트로 변환
         return generated_frames
